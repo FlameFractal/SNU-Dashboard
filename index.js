@@ -129,6 +129,16 @@ app.get('/getTop3/:page', function (req, res) {
   })
 });
 
+// update trending in DB
+/*
+post input: 
+for single click and single event
+{"user_id":1,"events":"8_3"}
+for multiple events
+{"user_id":1,"events":"8_3;9_4;"} semicolan seperated event ids
+
+output: updation happens in DB
+*/
 app.post('/Uptrending',function(req,res){
   var putInDB = req.body; // format {"user_id":number,"events":all_events_that_the_user_id_going}
   console.log(putInDB);
