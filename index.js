@@ -40,7 +40,13 @@ app.get('/', function (req, res) {
   });
 
 // api to get the latest post for each club
-// output format: 
+/* output format:
+{"title":"Cine u","content":"
+\"0_1510937289318_cineu.png\"
+
+\n","event_id":"8_3"}
+
+*/ 
 app.get('/latest/:page', function (req, res) {
 
   var latest_post = {}
@@ -65,6 +71,27 @@ app.get('/latest/:page', function (req, res) {
 });
 
 // get 3 latest cabpool/lostandfound posts
+/*
+output format:
+[{"title":"Pari Chowk -> SNU (07/12)","content":"
+Date: 7 December 2017
+\nTime: 2:30pm
+\nContact: 8492847473
+
+\n","event_id":"6_8"},{"title":"SNU -> Sector 16 (07/12)","content":"
+Date: 7 December 2016
+\nTime: 6pm
+\nContact: 7048563287
+
+\n","event_id":"6_6"},{"title":"IGI Airport -> SNU (09/12)","content":"
+Date: 9 December 2017
+\nTime: 11am
+\nContact: 9458213287
+
+\n","event_id":"6_5"}]
+
+
+*/
 app.get('/getTop3/:page', function (req, res) {
 
   var top3_posts = [] 
@@ -124,22 +151,7 @@ app.post('/Uptrending',function(req,res){
 
 });
 
-/*function updateUserEvents(inp_user_id,all_events){
-
-  // update event value in DB
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var myquery = { user_id: inp_user_id };
-    var newvalues = { user_id: inp_user_id, events: all_events };
-    db.collection("trending").updateOne(myquery, newvalues, function(err, res) {
-      if (err) throw err;
-      console.log("1 document updated");
-      db.close();
-    });
-  });
-
-}*/
-
+// functiont to update user events in db
 function updateUserEvents(inp_user_id,ind_events){
   
   var eve_app = "";
@@ -174,7 +186,7 @@ function updateUserEvents(inp_user_id,ind_events){
   
 
 }
-
+//function to update count in db
 function updateCount(inp_event_id){
   
   var c = 0;
@@ -213,34 +225,36 @@ function updateCount(inp_event_id){
   
 
 }
-
+// api to getTrending 
+/*
+output format:
+[{"event_id":"8_3","count":3}]
+*/
 app.get('/getTrending',function(req,res){
-  var arr = DBgetTrendingEvents(); //event_id":"8_7","count":4},{}]
-  var trending = []
-  for(i in arr){
-    trending[i] = {}
-    trending[i]["event_id"] = arr[i]["event_id"];
-    trending[i]["count"] = arr[i]["count"];
-  }
-  console.log("trending:",JSON.stringify(trending))
-  res.send(JSON.stringify(trending));
-});
-
-// output: [{"event_id":"8_7","count":4},{}]
-function DBgetTrendingEvents(){
-  var ret = [];
+  var arr = [];
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     db.collection("trendingevents").find({}).toArray(function(err, result) {
       if (err) throw err;
       console.log(result);
-      ret.push(result);
-      db.close();
-    });
-  });
-  return ret;
-}
+      arr = result;
+      var trending = []
+      console.log("arr",arr);
+      for(i in arr){
+        console.log("arr",arr);
+        trending[i] = {}
+        trending[i]["event_id"] = arr[i]["event_id"];
+        trending[i]["count"] = arr[i]["count"];
+      }
+      console.log("trending:",JSON.stringify(trending))
+      res.send(JSON.stringify(trending));
 
+
+    });
+    db.close();
+  });
+
+});
 
 var port = process.env.PORT || 8987;  // Use 8080 for local development because you might already have apache running on 80
 app.listen(port, function () {
