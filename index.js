@@ -23,21 +23,24 @@ site_url = "https://snu-dashboard.herokuapp.com"
 var url = 'mongodb://iws_hack:password@ds111496.mlab.com:11496/nodebb';
 page_id = {"cabpool":6, "faction":7, "cineu":8}
 
+//front page as response should be sent
 app.get('/', function (req, res) {
 
     
-    request(site_url+'/api/', function(err, resp, body){
-      if (err) throw err
-      if (! JSON.parse(body)["loggedIn"]) {
-        console.log("prasanna sucks")
-      }
-    })
-    //front-end: // check login user
-    // template static homepage
+  request(site_url+'/api/', function(err, resp, body){
+    if (err) throw err
+    if (! JSON.parse(body)["loggedIn"]) {
+      console.log("prasanna sucks")
+    }
+  })
+  //front-end: // check login user
+  // template static homepage
     
 
   });
 
+// api to get the latest post for each club
+// output format: 
 app.get('/latest/:page', function (req, res) {
 
   var latest_post = {}
@@ -51,9 +54,10 @@ app.get('/latest/:page', function (req, res) {
     request(site_url+"/api/topic/"+page_body["topics"][page_body["topics"].length-1].slug, function(err, resp, body){
       if (err) throw err
         post_body = JSON.parse(body)
+      console.log("post_body",post_body);
       latest_post["title"] =  post_body["title"]
       latest_post["content"] = post_body["posts"][0]["content"]
-      latest_post["event_id"] = post_body["topics"][0]["cid"] + "_" + post_body["topics"][0]["tid"]
+      latest_post["event_id"] = post_body["category"]["cid"] + "_" + post_body["posts"][0]["tid"]
       console.log(JSON.stringify(latest_post))
       res.send(JSON.stringify(latest_post));
     })
@@ -76,21 +80,21 @@ app.get('/getTop3/:page', function (req, res) {
       top3_posts[0] = {}
       top3_posts[0]["title"] =  post_body["title"]
       top3_posts[0]["content"] = post_body["posts"][0]["content"]
-      top3_posts[0]["event_id"] = post_body["topics"][0]["cid"] + "_" + post_body["topics"][0]["tid"]
+      top3_posts[0]["event_id"] = post_body["category"]["cid"] + "_" + post_body["posts"][0]["tid"]
       request(site_url+"/api/topic/"+page_body["topics"][page_body["topics"].length-2].slug, function (err, resp, body) {
         if (err) throw err
           post_body = JSON.parse(body)
         top3_posts[1] = {}
         top3_posts[1]["title"] =  post_body["title"]
         top3_posts[1]["content"] = post_body["posts"][0]["content"]
-        top3_posts[1]["event_id"] = post_body["topics"][0]["cid"] + "_" + post_body["topics"][0]["tid"]
+        top3_posts[1]["event_id"] = post_body["category"]["cid"] + "_" + post_body["posts"][0]["tid"]
         request(site_url+"/api/topic/"+page_body["topics"][page_body["topics"].length-3].slug, function (err, resp, body) {
           if (err) throw err
             post_body = JSON.parse(body)
           top3_posts[2] = {}
           top3_posts[2]["title"] =  post_body["title"]
           top3_posts[2]["content"] = post_body["posts"][0]["content"]
-          top3_posts[2]["event_id"] = post_body["topics"][0]["cid"] + "_" + post_body["topics"][0]["tid"]
+          top3_posts[2]["event_id"] = post_body["category"]["cid"] + "_" + post_body["posts"][0]["tid"]
           res.send(JSON.stringify(top3_posts));
         })
       })
