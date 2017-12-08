@@ -266,6 +266,61 @@ app.get('/getTrending',function(req,res){
 
 });
 
+// api to get userpref given user_id
+//input format: /getUserPref/1
+// output format: {"user_id":1,"clubs":"cineu;faction;tedx"}
+app.get("/getUserPref/:user_id",function(req,res){
+	var u_id = parseInt(req.params.user_id)
+	var ret = {};
+	MongoClient.connect(url,function(err,db){
+		if (err) throw err;
+		var q = {user_id:u_id};
+		console.log("q:",q);
+		db.collection("userpreferences").findOne(q,function(err,result){
+			if (err) throw err;
+			console.log(result);
+			if(result!=null){
+				ret["user_id"] = result.user_id;
+				ret["clubs"] = result.clubs;
+			}
+			else{
+				ret["user_id"] = u_id;
+				ret["clubs"] = "No preferences yet...";
+			}
+			console.log(JSON.stringify(ret));
+			res.send(JSON.stringify(ret));	
+		});
+
+		db.close();
+	});
+	
+
+});
+
+//api to update  user preferences
+app.post('/UpUserPref',function(req,res){
+  var putInDB = req.body; // format {"user_id":1,"clubs":"cineu;faction;"}
+  console.log(putInDB);
+  res.send(req.body);
+  updateUserPreferences(putInDB["user_id"],putInDB["clubs"]);
+
+});
+
+//function to update user preferences in DB
+function updateUserPreferences(inp_user_id,all_clubs){     
+  // update event value in DB   
+  MongoClient.connect(url, function(err, db) {    
+    if (err) throw err;   
+    var myquery = { user_id: inp_user_id };   
+    var newvalues = { user_id: inp_user_id, clubs: all_clubs };   
+    db.collection("userpreferences").updateOne(myquery, newvalues, function(err, res) {    
+      if (err) throw err;   
+      console.log("1 document updated");    
+      db.close();   
+    });   
+  });   
+
+}
 var port = process.env.PORT || 8987;  // Use 8080 for local development because you might already have apache running on 80
 app.listen(port, function () {
   console.log(`snu-dashboardd listening on port ${port}!`);
