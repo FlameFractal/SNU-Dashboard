@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <title></title>
   <link href="./css/newcss.css" rel="stylesheet">
-  <link href="./css/sinusoid.css" rel="stylesheet">
 
   <script src="./js/jquery.min.js"></script>
   <link rel="stylesheet" href="./css/materializecss-0_100_2.min.css">
@@ -12,7 +11,7 @@
 </head>
 <body>
 
-
+<!-- 
 <div id="preloader">
   <div class="circle" id="id1"></div>
   <div class="circle" id="id2"></div>
@@ -27,12 +26,14 @@
 </div>
 
 
-<div id="non-preloader" style="display:none">
-  
+ -->
 
+<!-- <div id="non-preloader" style="display:none"> -->
+<div id="non-preloader" >
+  
   <div id="app">
     <div class="top-bar">
-      <span id="header-text">Hi Vedant Chakravarthy!</span>
+      <span id="header-text">Hi!</span>
       <button id="logout-button" >
         LOGOUT <span>&#10005;</span>
       </button>
@@ -59,23 +60,23 @@
           <section class="stack-card-wrapper">
             <section class="stack-card">
               <!-- <img class="responsive-img" id="lel" data-adaptive-background src="mc.jpg"> -->
-              <div>
-                Lost & Found
+              <div class="forum-card-title">
+                Cabpool
               </div>
               <div class="">
                 <table>
                   <thead>
-                    <tr>
-                      <th>Subject</th>
-                      <th>Contact</th>
+                    <tr class="heading">
+                      <th class="subject">Subject</th>
+                      <th class="contact">Contact</th>
                     </tr>
                   </thead>
-                  <tr><td>{{forum[0].title}}</td><td>{{forum[0].contact}}</td></tr>
-                  <tr><td>{{forum[1].title}}</td><td>{{forum[1].contact}}</td></tr>
-                  <tr><td>{{forum[2].title}}</td><td>{{forum[2].contact}}</td></tr>
+                  <tr><td class="subject">{{forum[0].title}}</td><td class="contact">{{forum[0].contact}}</td></tr>
+                  <tr><td class="subject">{{forum[1].title}}</td><td class="contact">{{forum[1].contact}}</td></tr>
+                  <tr><td class="subject">{{forum[2].title}}</td><td class="contact">{{forum[2].contact}}</td></tr>
                 </table>
               </div>
-              <div>
+              <div class="forum-more">
                 View More >
               </div>
             </section>
@@ -83,24 +84,24 @@
           <section class="stack-card-wrapper">
             <section class="stack-card">
               <!-- <img class="responsive-img" data-adaptive-background src="mc.jpg"> -->
-              <div>
-                Cabpool
+              <div class="forum-card-title">
+                Lost and Found
               </div>
               <div class="">
                 <table>
                   <thead>
-                    <tr>
-                      <th>Subject</th>
-                      <th>Contact</th>
+                    <tr class="heading">
+                      <th class="subject">Subject</th>
+                      <th class="contact">Contact</th>
                     </tr>
                   </thead>
-                  <tr><td>{{lostfound[0].title}}</td><td>{{lostfound[0].contact}}</td></tr>
-                  <tr><td>{{lostfound[1].title}}</td><td>{{lostfound[1].contact}}</td></tr>
-                  <tr><td>{{lostfound[2].title}}</td><td>{{lostfound[2].contact}}</td></tr>
+                  <tr><td class="subject">{{lostfound[0].title}}</td><td class="contact">{{lostfound[0].contact}}</td></tr>
+                  <tr><td class="subject">{{lostfound[1].title}}</td><td class="contact">{{lostfound[1].contact}}</td></tr>
+                  <tr><td class="subject">{{lostfound[2].title}}</td><td class="contact">{{lostfound[2].contact}}</td></tr>
                 </table>
 
               </div>
-              <div>
+              <div class="forum-more">
                 View More >
               </div>
 
@@ -254,13 +255,17 @@ Bottom
         v-bind:class="{subscribed : club['isSubscribe'], nosubscribe : !club['isSubscribe']}"
         v-on:click="toggle(index)"
         >
-        {{club.title}}
+        {{club.clubname}}
       </div>
     </section>
   </section>
   <section v-if="normalmode && (club.isSubscribe == true)" v-for="club in clubs" class="stack-card-wrapper">
     <section class="stack-card">
-      <img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+      <section class="going-tab">
+        <button  v-bind:send="club.event_id">Going</button>
+        <!-- onclick="getuserdetails(this)" -->
+      </section>
+      <img class="responsive-img" v-bind:src="club.image">
       <div class="top-right-ele">
         {{club.title}}
       </div>
@@ -356,7 +361,6 @@ Bottom
 
 </div>
 </div>
-
 <script src="./js/vue-2_5_4.min.js" charset="utf-8"></script>
 <script src="./js/newjs.js" charset="utf-8"></script>
 

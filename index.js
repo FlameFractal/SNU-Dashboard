@@ -83,9 +83,9 @@ app.get('/', function (req, res) {
 
 */
 
-app.get('/auth/:asd', function(req, res){
-  res.redirect('/')
-})
+// app.get('/auth/:asd', function(req, res){
+//   res.redirect('/')
+// })
 
 app.get('/latest/:page', function (req, res) {
 

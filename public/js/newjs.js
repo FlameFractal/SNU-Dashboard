@@ -32,11 +32,28 @@ var telecast=
 	"title":"Telecast Schedule",
 	"content":"Today: This, that everything"
 };
-$(document).ready(function(){
-	checkLogin(afterLogin)
-});
 
-function afterLogin(){
+var clubnames=
+{
+	"cineu" : "Cine U",
+	"acm" : "ACM",
+	"words-ink" : "Words.INK",
+	"dhruva" : "Dhruva",
+	"inferno" : "Inferno",
+	"faction" : "Faction"
+};
+var imglist =
+{
+	"cineu" : "/images/takenthree.jpg",
+	"acm" : "/images/git.jpg",
+	"words-ink" : "/images/workink.jpg",
+	"dhruva" : "/images/dhruva.jpg",
+	"inferno" : "/images/inferno.jpg",
+	"faction" : "/images/faction.jpg"
+}
+$(document).ready(function(){ 	
+	// $('non-preloader').toggle()
+	
 	fixHeights();
 	// $('.club-stack > .stack-card-wrapper').height($('.cine-stack').parent().height()*0.22);
 	// $.adaptiveBackground.run();
@@ -67,13 +84,8 @@ function afterLogin(){
 	// getTrending();
 	fixHeights();
 
-}
+})
 
-function fixHeights(){
-	$('.forum-stack  .stack-card-wrapper').height($('.forum-stack').parent().height()*0.42);
-	$('.club-stack  .stack-card-wrapper').height($('.club-stack').parent().height()*0.21);
-	$('.cine-stack  .stack-card-wrapper').height($('.cine-stack').parent().height()*0.46);
-}
 
 function checkLogin(callback){
     console.log('checking login...')
@@ -121,6 +133,12 @@ function checkLogin(callback){
 }
 
 
+function fixHeights(){
+	$('.forum-stack  .stack-card-wrapper').height($('.forum-stack').parent().height()*0.42);
+	$('.club-stack  .stack-card-wrapper').height($('.club-stack').parent().height()*0.29);
+	$('.trend-stack  .stack-card-wrapper').height($('.trend-stack').parent().height()*0.29);
+	$('.cine-stack  .stack-card-wrapper').height($('.cine-stack').parent().height()*0.46);
+}
 var app = new Vue({
 	el: '#app',
 	data: {
@@ -163,8 +181,10 @@ function getClubData(sub){
 			"time" : parsedResp.content.slice(parsedResp.content.indexOf('WHEN')+5,parsedResp.content.indexOf('<br />')).trim(),
 			"location" : parsedResp.content.slice(parsedResp.content.indexOf('WHERE')+6,parsedResp.content.indexOf('</p>')).trim(),
 			"details" : parsedResp.content.slice(parsedResp.content.indexOf('DETAILS')+8,parsedResp.content.indexOf('</p>')).trim(),
-			"event_id" : parsedResp.event_id
-		}
+			"event_id" : parsedResp.event_id,
+			"image" : parsedResp.content.slice(parsedResp.content.indexOf('http'),parsedResp.content.indexOf('rel')-2).trim(),
+			"clubname" : clubnames[sub]
+		};
 
 
 
@@ -350,8 +370,58 @@ function getLostFound()
 		console.log("Done loading");
 	});
 }
-function getCurrentUser(){
+function getuserdetails(send){
+	var request = $.ajax({
+		url: "https://snu-dashboard.herokuapp.com/api/category/5/lost-and-found",
+		type: "get"
+	});
+	console.log("loading");
+	// Callback handler that will be called on success
+	request.done(function (response, textStatus, jqXHR){
+		console.log("RESPONSE",response);
+		var resp  = (response);
+		var dat = {
+			"user_id" : parseInt(resp["privileges"]["uid"]),
+			"events" : $(send).attr('send')
+		};
+		console.log("DAT",dat);
+		var request = $.ajax({
+			url: "/Uptrending",
+			type: "post",
+			data: dat
+		});
+		// Callback handler that will be called on success
+		request.done(function (response, textStatus, jqXHR){
+			console.log(response);
+		});
+		// Callback handler that will be called on failure
+		request.fail(function (jqXHR, textStatus, errorThrown){
+			// Log the error to the console
+			console.error(
+				"The following error occurred: "+
+				textStatus, errorThrown
+			);
+		});
+		request.always(function(){
 
+		});
+
+		// return response;
+	});
+
+	// Callback handler that will be called on failure
+	request.fail(function (jqXHR, textStatus, errorThrown){
+		// Log the error to the console
+		console.error(
+			"The following error occurred: "+
+			textStatus, errorThrown
+		);
+	});
+
+	request.always(function(){
+		console.log("Done loading");
+
+	})
 }
 /*
 
@@ -375,7 +445,24 @@ textStatus, errorThrown
 });
 
 */
+
+var ct_but = 0;
 function togFun(){
 	app.normalmode = !app.normalmode;
-	fixHeights();
+	Vue.nextTick(function () {
+		fixHeights();
+	});
+	var but = document.getElementById("add-club-icon");
+    if(ct_but%2 === 0){
+        but.style.transform = "rotate(45deg)";
+        ct_but++;
+    }
+    else{
+        but.style.transform = "rotate(0deg)";
+        ct_but++;
+    }
+}
+function sendgoing(send)
+{
+
 }
