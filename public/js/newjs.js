@@ -33,6 +33,10 @@ var telecast=
 	"content":"Today: This, that everything"
 };
 $(document).ready(function(){
+	checkLogin(afterLogin)
+});
+
+function afterLogin(){
 	fixHeights();
 	// $('.club-stack > .stack-card-wrapper').height($('.cine-stack').parent().height()*0.22);
 	// $.adaptiveBackground.run();
@@ -62,12 +66,61 @@ $(document).ready(function(){
 	// getClub()
 	// getTrending();
 	fixHeights();
-});
+
+}
+
 function fixHeights(){
 	$('.forum-stack  .stack-card-wrapper').height($('.forum-stack').parent().height()*0.42);
 	$('.club-stack  .stack-card-wrapper').height($('.club-stack').parent().height()*0.21);
 	$('.cine-stack  .stack-card-wrapper').height($('.cine-stack').parent().height()*0.46);
 }
+
+function checkLogin(callback){
+    console.log('checking login...')
+
+    	var request = $.ajax({
+		url: "https://snu-dashboard.herokuapp.com/api/category/5/lost-and-found",
+		type: "get"
+	});
+
+	var login;
+	console.log("loading");
+
+	// Callback handler that will be called on success
+	request.done(function (response, textStatus, jqXHR){
+		console.log(response);
+		login = response["privileges"]["uid"]
+		console.log("done "+login);
+
+    	if (login!=0) {
+	    	$('#preloader').toggle();
+    		$('#non-preloader').toggle();
+		} else {
+    		window.location = "https://snu-dashboard.herokuapp.com/login"
+		}
+		
+		callback()
+		return login
+	});
+
+	// Callback handler that will be called on failure
+	request.fail(function (jqXHR, textStatus, errorThrown){
+		// Log the error to the console
+		console.error(
+			"The following error occurred: "+
+			textStatus, errorThrown
+		);
+	
+		callback()
+		return 0
+	});
+
+
+    
+    return 1;
+}
+
+
 var app = new Vue({
 	el: '#app',
 	data: {
@@ -298,30 +351,7 @@ function getLostFound()
 	});
 }
 function getCurrentUser(){
-	var request = $.ajax({
-		url: "https://snu-dashboard.herokuapp.com/api/category/5/lost-and-found",
-		type: "get"
-	});
-	console.log("loading");
-	// Callback handler that will be called on success
-	request.done(function (response, textStatus, jqXHR){
 
-		console.log(response);
-	});
-
-	// Callback handler that will be called on failure
-	request.fail(function (jqXHR, textStatus, errorThrown){
-		// Log the error to the console
-		console.error(
-			"The following error occurred: "+
-			textStatus, errorThrown
-		);
-	});
-
-	request.always(function(){
-		console.log("Done loading");
-
-	})
 }
 /*
 

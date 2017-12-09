@@ -1,0 +1,67 @@
+#preloader{
+	width: 500px;
+    height: 500px;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.circle{
+	height: 20px;
+	width: 20px;
+	border-radius: 50%;
+	margin: 200px 10px;
+	top:  -100px;
+	float: left;
+    position: relative;
+	animation: sinusoid 1.5s alternate infinite ease-in-out;
+}
+
+#id1{
+	animation-delay: 0.1s;
+}
+
+#id2{
+	animation-delay: 0.2s;
+}
+
+#id3{
+	animation-delay: 0.3s;
+}
+
+#id4{
+	animation-delay: 0.4s;
+}
+
+#id5{
+	animation-delay: 0.5s;
+}
+
+#id6{
+	animation-delay: 0.6s;
+}
+
+#id7{
+	animation-delay: 0.7s;
+}
+
+#id8{
+	animation-delay: 0.8s;
+}
+
+#id9{
+	animation-delay: 0.9s;
+}
+
+#id10{
+	animation-delay: 1s;
+}
+
+@keyframes sinusoid {
+    0%  {transform: translateY(0px);}
+    50% {transform: translateY(100px);  background: #b92b27;}
+    100%{transform: translateY(0px);}
+}

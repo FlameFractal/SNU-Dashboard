@@ -82,6 +82,11 @@ app.get('/', function (req, res) {
 \n","event_id":"8_3"}
 
 */
+
+app.get('/auth/:asd'){
+  res.redirect('/')
+}
+
 app.get('/latest/:page', function (req, res) {
 
   var latest_post = {}
