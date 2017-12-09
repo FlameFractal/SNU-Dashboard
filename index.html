@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link href="./css/newcss.css" rel="stylesheet">
+
+  <script src="./js/jquery.min.js"></script>
+  <link rel="stylesheet" href="./css/materializecss-0_100_2.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <div class="top-bar">
+      <span id="header-text">Hi Vedant Chakravarthy!</span>
+      <button id="logout-button" >
+        LOGOUT <span>&#10005;</span>
+      </button>
+    </div>
+    <div class="title-wrapper-stack">
+      <section class="forum-title title-stack">
+        Forums
+      </section>
+      <section class="forum-title title-stack">
+        Trending
+      </section>
+      <section class="forum-title title-stack">
+        Light and Sound
+      </section>
+      <section class="forum-title title-stack" id="clubs-title">
+        Your clubs
+        <button id="add-club" v-on:click="togFun()">+</button>
+      </section>
+    </div>
+
+    <div class="outer-stack" >
+      <div class="forum-stack">
+        <div v-if="forumready">
+          <section class="stack-card-wrapper">
+            <section class="stack-card">
+              <!-- <img class="responsive-img" id="lel" data-adaptive-background src="mc.jpg"> -->
+              <div>
+                Lost & Found
+              </div>
+              <div class="">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Subject</th>
+                      <th>Contact</th>
+                    </tr>
+                  </thead>
+                  <tr><td>{{forum[0].title}}</td><td>{{forum[0].contact}}</td></tr>
+                  <tr><td>{{forum[1].title}}</td><td>{{forum[1].contact}}</td></tr>
+                  <tr><td>{{forum[2].title}}</td><td>{{forum[2].contact}}</td></tr>
+                </table>
+              </div>
+              <div>
+                View More >
+              </div>
+            </section>
+          </section>
+          <section class="stack-card-wrapper">
+            <section class="stack-card">
+              <!-- <img class="responsive-img" data-adaptive-background src="mc.jpg"> -->
+              <div>
+                Cabpool
+              </div>
+              <div class="">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Subject</th>
+                      <th>Contact</th>
+                    </tr>
+                  </thead>
+                  <tr><td>{{lostfound[0].title}}</td><td>{{lostfound[0].contact}}</td></tr>
+                  <tr><td>{{lostfound[1].title}}</td><td>{{lostfound[1].contact}}</td></tr>
+                  <tr><td>{{lostfound[2].title}}</td><td>{{lostfound[2].contact}}</td></tr>
+                </table>
+
+              </div>
+              <div>
+                View More >
+              </div>
+
+            </section>
+          </section>
+        </div>
+        <div v-if="!forumready">
+          <div class="loadercontainer">
+            <ul class="loadinglist">
+              <div class="panel">
+                <span class="loading5">
+                  <span class="outerCircle"></span>
+                </span>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="club-stack">
+      <section class="stack-card-wrapper">
+      <section class="stack-card">
+      <img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+      <div class="top-right-ele">
+      Top left
+    </div>
+    <div class="bottom-ele">
+    Bottom
+  </div>
+
+</section>
+</section>
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+
+</section>
+</section>
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+</section>
+</section>
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+</section>
+</section>
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+</section>
+</section>
+</div>
+-->
+
+<div class="trend-stack">
+  <div v-if="trendready">
+    <section v-for="trend in trends" class="stack-card-wrapper">
+      <section class="stack-card">
+        <img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+        <div class="top-right-ele">
+          {{trend.title}}
+        </div>
+        <div class="bottom-ele">
+          Bottom
+        </div>
+      </section>
+    </section>
+  </div>
+  <div v-if="!trendready">
+    <div class="loadercontainer">
+      <ul class="loadinglist">
+        <div class="panel">
+          <span class="loading5">
+            <span class="outerCircle"></span>
+          </span>
+        </div>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="cine-stack">
+  <div v-if="cineready">
+    <section class="stack-card-wrapper">
+      <section class="stack-card">
+        <img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+        <div class="top-right-ele">
+          {{cineu.title}}
+        </div>
+        <div class="bottom-ele">
+          {{cineu.time}}<br>
+          {{cineu.location}}
+        </div>
+      </section>
+    </section>
+    <section class="stack-card-wrapper">
+      <section class="stack-card">
+        <img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+        <div class="top-right-ele">
+          {{telecast.title}}
+        </div>
+        <div class="bottom-ele">
+          {{telecast.time}}<br>
+          {{telecast.location}}
+        </div>
+      </section>
+    </section>
+  </div>
+  <div v-if="!cineready">
+    <div class="loadercontainer">
+      <ul class="loadinglist">
+        <div class="panel">
+          <span class="loading5">
+            <span class="outerCircle"></span>
+          </span>
+        </div>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="club-stack">
+  <div v-if="clubready" v-on:onload="fun1()">
+    <section v-if="!normalmode">
+      <section v-for="club,index in clubs">
+        <div
+        v-bind:class="{subscribed : club['isSubscribe'], nosubscribe : !club['isSubscribe']}"
+        v-on:click="toggle(index)"
+        >
+        {{club.title}}
+      </div>
+    </section>
+  </section>
+  <section v-if="normalmode && (club.isSubscribe == true)" v-for="club in clubs" class="stack-card-wrapper">
+    <section class="stack-card">
+      <img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+      <div class="top-right-ele">
+        {{club.title}}
+      </div>
+      <div class="bottom-ele">
+        Bottom
+      </div>
+    </section>
+  </section>
+</div>
+<div v-if="!clubready">
+  <div class="loadercontainer">
+    <ul class="loadinglist">
+      <div class="panel">
+        <span class="loading5">
+          <span class="outerCircle"></span>
+        </span>
+      </div>
+    </ul>
+  </div>
+</div>
+</div>
+
+
+<!-- <div class="trend-stack">
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+</section>
+</section>
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+</section>
+</section>
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+</section>
+</section>
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+</section>
+</section>
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+</section>
+
+</section>
+<section class="stack-card-wrapper">
+<section class="stack-card">
+<img class="responsive-img" src="http://www.freakingnews.com/pictures/29500/Monster-Cat-Scaring-a-Dog--29537.jpg">
+<div class="top-right-ele">
+Top left
+</div>
+<div class="bottom-ele">
+Bottom
+</div>
+</section>
+</section>
+</div> -->
+
+</div>
+
+<script src="./js/vue-2_5_4.min.js" charset="utf-8"></script>
+<script src="./js/newjs.js" charset="utf-8"></script>
+
+</body>
+</html>

@@ -2,7 +2,8 @@ var express = require('express');
 var path = require('path');
 var http = require('http');
 var request = require('request-promise');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var fs = require('fs');
 
 var app = express();
 var MongoClient = require('mongodb').MongoClient
@@ -18,24 +19,58 @@ app.use("/css", express.static(__dirname+'/ui/css'));
 app.use("/img", express.static(__dirname+'/ui/img'));
 app.use("/js", express.static(__dirname+'/ui/js'));
 app.use("/vendor", express.static(__dirname+'/ui/vendor'));
+app.use(express.static('public'));
 
 site_url = "https://snu-dashboard.herokuapp.com"
 var url = 'mongodb://iws_hack:password@ds111496.mlab.com:11496/nodebb';
-page_id = {"cabpool":6, "faction":7, "cineu":8}
+page_id = {
+  "lost-and-found":5,
+  "cabpool":6,
+  "faction":7,
+  "cineu":8,
+  "live-telecast":10,
+  "inferno":11,
+  "snuphoria":12,
+  "visuallysnu":13,
+  "words-ink":14,
+  "acm":15,
+  "dhruva":16
+};
+
+// getClubData("faction");
+// getClubData("acm");
+// getClubData("visuallysnu");
+// getClubData("wordsink");
+// getClubData("snuphoria");
+// getClubData("dhruva");
+// getClubData("inferno");
 
 //front page as response should be sent
 app.get('/', function (req, res) {
 
-    
+  fs.readFile("index.html", function(err, data){
+     if(err){
+        res.writeHead(404);
+        res.write("Not Found!");
+     }
+     else{
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
+     }
+     res.end();
+  });
+
+  // res.write('<b>Hey there!</b><br /><br />This is the default response. Requested URL is: ' + req.url);
+
   request(site_url+'/api/', function(err, resp, body){
     if (err) throw err
     if (! JSON.parse(body)["loggedIn"]) {
-      console.log("prasanna sucks")
+      console.log("prasanna sucks2");
     }
   })
   //front-end: // check login user
   // template static homepage
-    
+
 
   });
 
@@ -46,7 +81,7 @@ app.get('/', function (req, res) {
 
 \n","event_id":"8_3"}
 
-*/ 
+*/
 app.get('/latest/:page', function (req, res) {
 
   var latest_post = {}
@@ -94,13 +129,14 @@ Date: 9 December 2017
 */
 app.get('/getTop3/:page', function (req, res) {
 
-  var top3_posts = [] 
+  var top3_posts = []
   var page = req.params.page
   var page_body
 
   request(site_url+'/api/category/'+page_id[page]+'/'+page, function (err, resp, body) {
     if (err) throw err
       page_body = JSON.parse(body)
+      console.log(site_url+"/api/topic/"+page_body["topics"])
     request(site_url+"/api/topic/"+page_body["topics"][page_body["topics"].length-1].slug, function (err, resp, body) {
       if (err) throw err
         post_body = JSON.parse(body)
@@ -131,7 +167,7 @@ app.get('/getTop3/:page', function (req, res) {
 
 // update trending in DB
 /*
-post input: 
+post input:
 for single click and single event
 {"user_id":1,"events":"8_3"}
 for multiple events
@@ -153,7 +189,7 @@ app.post('/Uptrending',function(req,res){
   }
   // api for checking which user is logged in: x = https://snu-dashboard.herokuapp.com/api/category/5/lost-and-found
   // x["privileges"]["uid"] 1 - admin, 5 - cineu, 6 - faction
-  // if this is 0 then there is not user
+  // if this is 0 then user is NOT logged in
 
   // topic_count = x["topic_count"]
   // loop over all of them
@@ -163,7 +199,7 @@ app.post('/Uptrending',function(req,res){
 
 // functiont to update user events in db
 function updateUserEvents(inp_user_id,ind_events){
-  
+
   var eve_app = "";
   // update event value in DB
   MongoClient.connect(url,function(err,db){
@@ -189,16 +225,16 @@ function updateUserEvents(inp_user_id,ind_events){
           db.close();
         });
       });
-      
+
 
       });
   });
-  
+
 
 }
 //function to update count in db
 function updateCount(inp_event_id){
-  
+
   var c = 0;
   //get count value from DB
   console.log("event_id=",inp_event_id);
@@ -232,10 +268,10 @@ function updateCount(inp_event_id){
 
       });
   });
-  
+
 
 }
-// api to getTrending 
+// api to getTrending
 /*
 output format:
 [{"event_id":"8_3","count":3}]
@@ -288,13 +324,10 @@ app.get("/getUserPref/:user_id",function(req,res){
 				ret["clubs"] = "No preferences yet...";
 			}
 			console.log(JSON.stringify(ret));
-			res.send(JSON.stringify(ret));	
+			res.send(JSON.stringify(ret));
 		});
-
 		db.close();
 	});
-	
-
 });
 
 //api to update  user preferences
@@ -307,18 +340,18 @@ app.post('/UpUserPref',function(req,res){
 });
 
 //function to update user preferences in DB
-function updateUserPreferences(inp_user_id,all_clubs){     
-  // update event value in DB   
-  MongoClient.connect(url, function(err, db) {    
-    if (err) throw err;   
-    var myquery = { user_id: inp_user_id };   
-    var newvalues = { user_id: inp_user_id, clubs: all_clubs };   
-    db.collection("userpreferences").updateOne(myquery, newvalues, function(err, res) {    
-      if (err) throw err;   
-      console.log("1 document updated");    
-      db.close();   
-    });   
-  });   
+function updateUserPreferences(inp_user_id,all_clubs){
+  // update event value in DB
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var myquery = { user_id: inp_user_id };
+    var newvalues = { user_id: inp_user_id, clubs: all_clubs };
+    db.collection("userpreferences").updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      db.close();
+    });
+  });
 
 }
 var port = process.env.PORT || 8987;  // Use 8080 for local development because you might already have apache running on 80
